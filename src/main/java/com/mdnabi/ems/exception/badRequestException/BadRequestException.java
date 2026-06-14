@@ -1,4 +1,4 @@
-package com.mdnabi.ems.exception.BadRequestException;
+package com.mdnabi.ems.exception.badRequestException;
 
 public class BadRequestException extends RuntimeException{
 
