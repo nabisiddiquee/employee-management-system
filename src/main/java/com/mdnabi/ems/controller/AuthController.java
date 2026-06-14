@@ -27,4 +27,9 @@ public class AuthController {
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
     }
+
+    @GetMapping
+    public String test() {
+        return "JWT Working Successfully";
+    }
 }
