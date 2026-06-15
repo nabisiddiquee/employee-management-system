@@ -1,8 +1,6 @@
-package com.mdnabi.ems.exception.globalExceptionHandler;
+package com.mdnabi.ems.exception;
 
 import com.mdnabi.ems.dto.response.ApiResponse;
-import com.mdnabi.ems.exception.badRequestException.BadRequestException;
-import com.mdnabi.ems.exception.resourceNotFoundException.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

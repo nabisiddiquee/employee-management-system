@@ -1,4 +1,4 @@
-package com.mdnabi.ems.exception.resourceNotFoundException;
+package com.mdnabi.ems.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
 

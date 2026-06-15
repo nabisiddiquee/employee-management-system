@@ -7,7 +7,7 @@ import com.mdnabi.ems.dto.response.LoginResponse;
 import com.mdnabi.ems.entity.Role;
 import com.mdnabi.ems.entity.User;
 
-import com.mdnabi.ems.exception.badRequestException.*;
+import com.mdnabi.ems.exception.BadRequestException;
 import com.mdnabi.ems.repository.RoleRepository;
 import com.mdnabi.ems.repository.UserRepository;
 import com.mdnabi.ems.security.JwtUtil;

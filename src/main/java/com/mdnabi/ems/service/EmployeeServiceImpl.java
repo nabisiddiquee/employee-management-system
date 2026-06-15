@@ -4,6 +4,8 @@ import com.mdnabi.ems.dto.request.EmployeeRequest;
 import com.mdnabi.ems.dto.response.ApiResponse;
 import com.mdnabi.ems.dto.response.EmployeeResponse;
 import com.mdnabi.ems.entity.Employee;
+import com.mdnabi.ems.exception.BadRequestException;
+import com.mdnabi.ems.exception.ResourceNotFoundException;
 import com.mdnabi.ems.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public ApiResponse<EmployeeResponse> createEmployee(EmployeeRequest request) {
+
+        validateCreateEmployee(request);
 
         Employee employee = new Employee();
 
@@ -42,22 +46,114 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public ApiResponse<List<EmployeeResponse>> getAllEmployees() {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        List<EmployeeResponse> employees = employeeRepository.findByDeletedFalse()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        return new ApiResponse<>(
+                true,
+                "Employees fetched successfully",
+                employees
+        );
     }
 
     @Override
     public ApiResponse<EmployeeResponse> getEmployeeById(Long id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        Employee employee = employeeRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Employee not found with id: " + id));
+
+        return new ApiResponse<>(
+                true,
+                "Employee fetched successfully",
+                mapToResponse(employee)
+        );
     }
 
     @Override
-    public ApiResponse<EmployeeResponse> updateEmployee(Long id, EmployeeRequest request) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public ApiResponse<EmployeeResponse> updateEmployee(
+            Long id,
+            EmployeeRequest request) {
+
+        Employee employee = employeeRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Employee not found with id: " + id));
+
+        validateUpdateEmployee(id, request);
+
+        employee.setEmployeeCode(request.getEmployeeCode());
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setMobile(request.getMobile());
+        employee.setDepartment(request.getDepartment());
+        employee.setSalary(request.getSalary());
+        employee.setStatus(request.getStatus());
+        employee.setJoiningDate(request.getJoiningDate());
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return new ApiResponse<>(
+                true,
+                "Employee updated successfully",
+                mapToResponse(updatedEmployee)
+        );
     }
 
     @Override
     public ApiResponse<String> deleteEmployee(Long id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        Employee employee = employeeRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Employee not found with id: " + id));
+
+        employee.setDeleted(true);
+        employeeRepository.save(employee);
+
+        return new ApiResponse<>(
+                true,
+                "Employee deleted successfully",
+                null
+        );
+    }
+
+    private void validateCreateEmployee(EmployeeRequest request) {
+
+        if (employeeRepository.existsByEmployeeCode(request.getEmployeeCode())) {
+            throw new BadRequestException("Employee code already exists");
+        }
+
+        if (employeeRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("Email already exists");
+        }
+
+        if (employeeRepository.existsByMobile(request.getMobile())) {
+            throw new BadRequestException("Mobile number already exists");
+        }
+    }
+
+    private void validateUpdateEmployee(Long id, EmployeeRequest request) {
+
+        if (employeeRepository.existsByEmployeeCodeAndIdNot(request.getEmployeeCode(), id)) {
+            throw new BadRequestException("Employee code already exists");
+        }
+
+        if (employeeRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+            throw new BadRequestException("Email already exists");
+        }
+
+        if (employeeRepository.existsByMobileAndIdNot(request.getMobile(), id)) {
+            throw new BadRequestException("Mobile number already exists");
+        }
     }
 
     private EmployeeResponse mapToResponse(Employee employee) {
