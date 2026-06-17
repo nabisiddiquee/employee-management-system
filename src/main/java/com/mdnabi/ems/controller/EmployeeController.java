@@ -48,4 +48,15 @@ public class EmployeeController {
 
         return employeeService.deleteEmployee(id);
     }
+
+    @GetMapping("/search")
+    public ApiResponse<Object> searchEmployees(
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        return employeeService.searchEmployees(keyword, page, size, sortBy, sortDir);
+    }
 }

@@ -17,4 +17,12 @@ public interface EmployeeService {
     ApiResponse<EmployeeResponse> updateEmployee(Long id, EmployeeRequest request);
 
     ApiResponse<String> deleteEmployee(Long id);
+
+    ApiResponse<Object> searchEmployees(
+            String keyword,
+            int page,
+            int size,
+            String sortBy,
+            String sortDir
+    );
 }

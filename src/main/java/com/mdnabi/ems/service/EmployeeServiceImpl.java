@@ -7,10 +7,17 @@ import com.mdnabi.ems.entity.Employee;
 import com.mdnabi.ems.exception.BadRequestException;
 import com.mdnabi.ems.exception.ResourceNotFoundException;
 import com.mdnabi.ems.repository.EmployeeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -123,6 +130,43 @@ public class EmployeeServiceImpl implements EmployeeService {
                 true,
                 "Employee deleted successfully",
                 null
+        );
+    }
+
+    @Override
+    public ApiResponse<Object> searchEmployees(
+            String keyword,
+            int page,
+            int size,
+            String sortBy,
+            String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Employee> employeePage =
+                employeeRepository.searchEmployees(keyword, pageable);
+
+        List<EmployeeResponse> employees = employeePage
+                .getContent()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("employees", employees);
+        response.put("currentPage", employeePage.getNumber());
+        response.put("totalItems", employeePage.getTotalElements());
+        response.put("totalPages", employeePage.getTotalPages());
+        response.put("pageSize", employeePage.getSize());
+
+        return new ApiResponse<>(
+                true,
+                "Employees fetched successfully",
+                response
         );
     }
 
