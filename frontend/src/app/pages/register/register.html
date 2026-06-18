@@ -1,0 +1,97 @@
+<div class="register-page">
+  <div class="register-shell">
+
+    <section class="register-info">
+      <div class="info-badge">EMS Registration</div>
+
+      <h1>Create your secure employee portal account.</h1>
+
+      <p>
+        Join the Employee Management System and start managing users,
+        employees, roles and secure access from one dashboard.
+      </p>
+
+      <div class="info-card">
+        <span>✅</span>
+        <div>
+          <h4>Secure Registration</h4>
+          <p>BCrypt password encryption with validation.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span>🔐</span>
+        <div>
+          <h4>JWT Ready</h4>
+          <p>Login securely after account creation.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="register-form-section">
+      <div class="register-card">
+
+        <div class="brand-logo">EMS</div>
+
+        <h2>Create Account</h2>
+        <p class="subtitle">Register to access your dashboard</p>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="Enter full name">
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="Enter email address">
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Enter password">
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="confirmPassword"
+              placeholder="Confirm password">
+          </div>
+
+          <button
+            type="submit"
+            class="register-btn"
+            [disabled]="loading">
+
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+
+          </button>
+
+          <p class="login-text">
+            Already have an account?
+            <a routerLink="/login">Login</a>
+          </p>
+
+        </form>
+
+      </div>
+    </section>
+
+  </div>
+</div>

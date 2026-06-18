@@ -1,0 +1,65 @@
+/* ===== Premium SweetAlert Design ===== */
+
+.ems-alert-popup {
+width: 430px !important;
+padding: 34px 32px 30px !important;
+border-radius: 28px !important;
+background: linear-gradient(145deg, #ffffff, #f8fbff) !important;
+box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22) !important;
+border: 1px solid rgba(148, 163, 184, 0.18) !important;
+}
+
+.ems-alert-title {
+margin-top: 12px !important;
+color: #0f172a !important;
+font-size: 28px !important;
+font-weight: 800 !important;
+letter-spacing: -0.5px !important;
+}
+
+.ems-alert-message {
+margin-top: 12px !important;
+color: #64748b !important;
+font-size: 15px !important;
+line-height: 1.65 !important;
+}
+
+.ems-alert-icon {
+transform: scale(1.06);
+}
+
+.ems-alert-button {
+min-width: 165px !important;
+margin-top: 18px !important;
+padding: 13px 22px !important;
+border: 0 !important;
+border-radius: 14px !important;
+color: #ffffff !important;
+font-size: 15px !important;
+font-weight: 800 !important;
+box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22) !important;
+transition: all 0.25s ease !important;
+}
+
+.ems-alert-button:hover {
+transform: translateY(-2px) !important;
+}
+
+.ems-alert-success-button {
+background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+}
+
+.ems-alert-error-button {
+background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+box-shadow: 0 10px 22px rgba(220, 38, 38, 0.2) !important;
+}
+
+.ems-alert-warning-button {
+background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+box-shadow: 0 10px 22px rgba(245, 158, 11, 0.2) !important;
+}
+
+.swal2-backdrop-show {
+background: rgba(15, 23, 42, 0.58) !important;
+backdrop-filter: blur(5px) !important;
+}
