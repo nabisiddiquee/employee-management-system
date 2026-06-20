@@ -1,0 +1,207 @@
+<div class="dashboard-layout">
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-logo">
+      <div class="logo-box">EMS</div>
+
+      <div>
+        <h3>EMS Portal</h3>
+        <p>Admin Dashboard</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a class="menu-item active">
+        <span>📊</span>
+        Dashboard
+      </a>
+
+      <a class="menu-item">
+        <span>👥</span>
+        Employees
+      </a>
+
+      <a class="menu-item">
+        <span>➕</span>
+        Add Employee
+      </a>
+
+      <a class="menu-item">
+        <span>🔐</span>
+        Roles
+      </a>
+
+      <a class="menu-item">
+        <span>⚙️</span>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" type="button" (click)="logout()">
+        Logout
+      </button>
+    </div>
+
+
+  </aside>
+
+  <main class="dashboard-main">
+
+
+    <header class="topbar">
+
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ userEmail() }}</p>
+      </div>
+
+      <div class="topbar-actions">
+
+        <div class="digital-clock-card">
+          <div class="clock-label">System Clock</div>
+
+          <div class="clock-screen">
+            <div class="clock-time">
+              {{ currentTime() }}
+            </div>
+
+            <div class="clock-date">
+              {{ currentDay() }} • {{ currentDate() }}
+            </div>
+          </div>
+        </div>
+
+        <button class="primary-btn" type="button">
+          + Add Employee
+        </button>
+
+        <div class="profile-avatar">
+          {{ userEmail().charAt(0).toUpperCase() }}
+        </div>
+
+      </div>
+
+    </header>
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+
+        <div>
+          <p>Total Employees</p>
+          <h2>0</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+
+        <div>
+          <p>Active Employees</p>
+          <h2>0</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">🏢</div>
+
+        <div>
+          <p>Departments</p>
+          <h2>0</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purple">🔐</div>
+
+        <div>
+          <p>Secure Access</p>
+          <h2>JWT</h2>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="content-grid">
+
+      <div class="panel employee-panel">
+
+        <div class="panel-header">
+          <div>
+            <h3>Recent Employees</h3>
+            <p>Employee list API integration will be added next.</p>
+          </div>
+
+          <button class="outline-btn" type="button">
+            View All
+          </button>
+        </div>
+
+        <div class="empty-state">
+          <div class="empty-icon">👨‍💼</div>
+
+          <h4>No employee data loaded yet</h4>
+
+          <p>
+            Next step: connect dashboard with protected employee APIs.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="panel activity-panel">
+
+        <h3>Project Progress</h3>
+
+        <div class="timeline">
+
+          <div class="timeline-item done">
+            <span></span>
+
+            <div>
+              <h4>Backend APIs</h4>
+              <p>JWT, RBAC, Employee CRUD completed</p>
+            </div>
+          </div>
+
+          <div class="timeline-item done">
+            <span></span>
+
+            <div>
+              <h4>Registration Flow</h4>
+              <p>Angular + SweetAlert integrated</p>
+            </div>
+          </div>
+
+          <div class="timeline-item done">
+            <span></span>
+
+            <div>
+              <h4>Login Flow</h4>
+              <p>JWT saved and dashboard redirect completed</p>
+            </div>
+          </div>
+
+          <div class="timeline-item pending">
+            <span></span>
+
+            <div>
+              <h4>Employee List</h4>
+              <p>API integration starts next</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+</div>
