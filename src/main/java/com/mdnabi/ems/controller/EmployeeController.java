@@ -6,8 +6,8 @@ import com.mdnabi.ems.dto.response.EmployeeResponse;
 import com.mdnabi.ems.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,20 +18,20 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ROLE_ADMIN')")
     @PostMapping
     public ApiResponse<EmployeeResponse> createEmployee(
             @Valid @RequestBody EmployeeRequest request) {
         return employeeService.createEmployee(request);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
     public ApiResponse<List<EmployeeResponse>> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/{id}")
     public ApiResponse<EmployeeResponse> getEmployeeById(
             @PathVariable Long id) {
@@ -39,7 +39,7 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ApiResponse<EmployeeResponse> updateEmployee(
             @PathVariable Long id,
@@ -47,7 +47,7 @@ public class EmployeeController {
         return employeeService.updateEmployee(id, request);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteEmployee(
             @PathVariable Long id) {
@@ -55,7 +55,7 @@ public class EmployeeController {
         return employeeService.deleteEmployee(id);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping("/search")
     public ApiResponse<Object> searchEmployees(
             @RequestParam(required = false, defaultValue = "") String keyword,

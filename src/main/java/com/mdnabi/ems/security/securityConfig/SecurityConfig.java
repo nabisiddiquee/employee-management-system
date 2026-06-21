@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -52,16 +54,16 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/employees/**")
-                        .hasAnyRole("ADMIN", "USER")
+                        .hasAnyAuthority("ADMIN", "USER", "ROLE_ADMIN", "ROLE_USER")
 
                         .requestMatchers(HttpMethod.POST, "/api/employees/**")
-                        .hasRole("ADMIN")
+                        .hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.PUT, "/api/employees/**")
-                        .hasRole("ADMIN")
+                        .hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.DELETE, "/api/employees/**")
-                        .hasRole("ADMIN")
+                        .hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                         .anyRequest()
                         .authenticated()
