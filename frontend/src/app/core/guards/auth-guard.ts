@@ -6,12 +6,16 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);
 
-  if (isPlatformBrowser(platformId)) {
-    const token = window.localStorage.getItem('ems_token');
+  // During server-side rendering, localStorage is not available.
+  // Allow route rendering on server, then browser will validate token.
+  if (!isPlatformBrowser(platformId)) {
+    return true;
+  }
 
-    if (token) {
-      return true;
-    }
+  const token = window.localStorage.getItem('ems_token');
+
+  if (token && token.trim().length > 0) {
+    return true;
   }
 
   return router.createUrlTree(['/login']);

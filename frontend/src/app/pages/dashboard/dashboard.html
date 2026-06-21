@@ -13,17 +13,17 @@
     </div>
 
     <nav class="sidebar-menu">
-      <a class="menu-item active">
+      <a class="menu-item active" href="/dashboard">
         <span>📊</span>
         Dashboard
       </a>
 
-      <a class="menu-item">
+      <a class="menu-item" href="/employees">
         <span>👥</span>
         Employees
       </a>
 
-      <a class="menu-item">
+      <a class="menu-item" href="/employees">
         <span>➕</span>
         Add Employee
       </a>
@@ -74,9 +74,9 @@
           </div>
         </div>
 
-        <button class="primary-btn" type="button">
+        <a class="primary-btn topbar-link-btn" href="/employees">
           + Add Employee
-        </button>
+        </a>
 
         <div class="profile-avatar">
           {{ userEmail().charAt(0).toUpperCase() }}
@@ -93,7 +93,7 @@
 
         <div>
           <p>Total Employees</p>
-          <h2>0</h2>
+          <h2>{{ totalEmployees() }}</h2>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
 
         <div>
           <p>Active Employees</p>
-          <h2>0</h2>
+          <h2>{{ activeEmployees() }}</h2>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
 
         <div>
           <p>Departments</p>
-          <h2>0</h2>
+          <h2>{{ departments() }}</h2>
         </div>
       </div>
 
@@ -133,22 +133,62 @@
         <div class="panel-header">
           <div>
             <h3>Recent Employees</h3>
-            <p>Employee list API integration will be added next.</p>
+            <p>Live employee data from protected backend API.</p>
           </div>
 
-          <button class="outline-btn" type="button">
+          <a class="outline-btn topbar-link-btn" href="/employees">
             View All
-          </button>
+          </a>
         </div>
 
-        <div class="empty-state">
-          <div class="empty-icon">👨‍💼</div>
+        <div *ngIf="employeeLoading()" class="empty-state">
+          <div class="empty-icon">⏳</div>
 
-          <h4>No employee data loaded yet</h4>
+          <h4>Loading employees...</h4>
 
           <p>
-            Next step: connect dashboard with protected employee APIs.
+            Please wait while EMS fetches employee data.
           </p>
+        </div>
+
+        <div *ngIf="!employeeLoading() && employeeError()" class="empty-state">
+          <div class="empty-icon">⚠️</div>
+
+          <h4>Employee API Error</h4>
+
+          <p>
+            {{ employeeError() }}
+          </p>
+        </div>
+
+        <div *ngIf="!employeeLoading() && !employeeError() && recentEmployees().length === 0" class="empty-state">
+          <div class="empty-icon">👨‍💼</div>
+
+          <h4>No employee data found</h4>
+
+          <p>
+            Add employees from backend API, then they will appear here.
+          </p>
+        </div>
+
+        <div *ngIf="!employeeLoading() && !employeeError() && recentEmployees().length > 0" class="employee-list">
+          <div class="employee-row" *ngFor="let employee of recentEmployees()">
+
+            <div class="employee-avatar">
+              {{ getEmployeeName(employee).charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="employee-info">
+              <h4>{{ getEmployeeName(employee) }}</h4>
+              <p>{{ employee.email || 'No email available' }}</p>
+            </div>
+
+            <div class="employee-meta">
+              <span>{{ employee.department || 'N/A' }}</span>
+              <small>{{ employee.designation || 'Employee' }}</small>
+            </div>
+
+          </div>
         </div>
 
       </div>
@@ -186,12 +226,21 @@
             </div>
           </div>
 
+          <div class="timeline-item done">
+            <span></span>
+
+            <div>
+              <h4>Auth Guard</h4>
+              <p>Dashboard route protected successfully</p>
+            </div>
+          </div>
+
           <div class="timeline-item pending">
             <span></span>
 
             <div>
               <h4>Employee List</h4>
-              <p>API integration starts next</p>
+              <p>Dashboard API integration in progress</p>
             </div>
           </div>
 

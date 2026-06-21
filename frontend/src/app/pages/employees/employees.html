@@ -1,0 +1,234 @@
+<div class="employees-layout">
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-logo">
+            <div class="logo-box">EMS</div>
+
+            <div>
+                <h3>EMS Portal</h3>
+                <p>Admin Dashboard</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a class="menu-item" href="/dashboard">
+                <span>📊</span>
+                Dashboard
+            </a>
+
+            <a class="menu-item active">
+                <span>👥</span>
+                Employees
+            </a>
+
+            <a class="menu-item" (click)="addEmployee()">
+                <span>➕</span>
+                Add Employee
+            </a>
+
+            <a class="menu-item">
+                <span>🔐</span>
+                Roles
+            </a>
+
+            <a class="menu-item">
+                <span>⚙️</span>
+                Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" type="button" (click)="logout()">
+                Logout
+            </button>
+        </div>
+
+
+    </aside>
+
+    <main class="employees-main">
+
+
+        <header class="employees-topbar">
+
+            <div>
+                <h1>Employees</h1>
+                <p>Manage employees, search records, and perform admin actions.</p>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="ghost-btn" type="button" (click)="goToDashboard()">
+                    Dashboard
+                </button>
+
+                <button class="primary-btn" type="button" (click)="addEmployee()">
+                    + Add Employee
+                </button>
+
+                <div class="profile-avatar">
+                    {{ userEmail().charAt(0).toUpperCase() }}
+                </div>
+            </div>
+
+        </header>
+
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <div class="summary-icon blue">👥</div>
+
+                <div>
+                    <p>Total Employees</p>
+                    <h2>{{ employees().length }}</h2>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon green">✅</div>
+
+                <div>
+                    <p>Showing</p>
+                    <h2>{{ paginatedEmployees().length }}</h2>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon orange">🔎</div>
+
+                <div>
+                    <p>Search Results</p>
+                    <h2>{{ filteredEmployees().length }}</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="table-panel">
+
+            <div class="table-toolbar">
+
+                <div>
+                    <h3>Employee Directory</h3>
+                    <p>Protected employee data loaded with JWT authentication.</p>
+                </div>
+
+                <div class="search-box">
+                    <span>🔎</span>
+
+                    <input type="text" placeholder="Search by name, email, department..." [(ngModel)]="searchText"
+                        (ngModelChange)="onSearchChange()" />
+                </div>
+
+            </div>
+
+            <div *ngIf="loading()" class="state-box">
+                <div class="state-icon">⏳</div>
+                <h4>Loading employees...</h4>
+                <p>Please wait while EMS fetches employee records.</p>
+            </div>
+
+            <div *ngIf="!loading() && errorMessage()" class="state-box">
+                <div class="state-icon error">⚠️</div>
+                <h4>Employee API Error</h4>
+                <p>{{ errorMessage() }}</p>
+            </div>
+
+            <div *ngIf="!loading() && !errorMessage() && filteredEmployees().length === 0" class="state-box">
+                <div class="state-icon">👨‍💼</div>
+                <h4>No employees found</h4>
+                <p>Try a different search keyword or add a new employee.</p>
+            </div>
+
+            <div *ngIf="!loading() && !errorMessage() && filteredEmployees().length > 0" class="table-wrapper">
+
+                <table class="employees-table">
+
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                            <th class="actions-col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let employee of paginatedEmployees()">
+
+                            <td>
+                                <div class="employee-cell">
+                                    <div class="employee-avatar">
+                                        {{ getEmployeeName(employee).charAt(0).toUpperCase() }}
+                                    </div>
+
+                                    <div>
+                                        <h4>{{ getEmployeeName(employee) }}</h4>
+                                        <p>ID: {{ employee.id || 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{ employee.email || 'N/A' }}</td>
+
+                            <td>
+                                <span class="department-pill">
+                                    {{ employee.department || 'N/A' }}
+                                </span>
+                            </td>
+
+                            <td>{{ employee.designation || 'Employee' }}</td>
+
+                            <td>
+                                <span class="status-pill" [class.inactive]="getEmployeeStatus(employee) === 'Inactive'">
+                                    {{ getEmployeeStatus(employee) }}
+                                </span>
+                            </td>
+
+                            <td class="actions-col">
+                                <button class="action-btn view" type="button" (click)="viewEmployee(employee)">
+                                    View
+                                </button>
+
+                                <button class="action-btn edit" type="button" (click)="editEmployee(employee)">
+                                    Edit
+                                </button>
+
+                                <button class="action-btn delete" type="button" (click)="deleteEmployee(employee)">
+                                    Delete
+                                </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div *ngIf="!loading() && !errorMessage() && filteredEmployees().length > 0" class="pagination-bar">
+
+                <p>
+                    Page {{ currentPage }} of {{ totalPages }}
+                </p>
+
+                <div class="pagination-actions">
+                    <button type="button" [disabled]="currentPage === 1" (click)="previousPage()">
+                        Previous
+                    </button>
+
+                    <button type="button" [disabled]="currentPage === totalPages" (click)="nextPage()">
+                        Next
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>

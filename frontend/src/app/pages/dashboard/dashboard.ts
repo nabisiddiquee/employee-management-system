@@ -10,6 +10,11 @@ import {
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+import {
+  Employee,
+  EmployeeModel
+} from '../../core/services/employee';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -24,10 +29,19 @@ export class Dashboard implements OnInit, OnDestroy {
   currentDate = signal('--');
   currentDay = signal('--');
 
+  totalEmployees = signal(0);
+  activeEmployees = signal(0);
+  departments = signal(0);
+  recentEmployees = signal<EmployeeModel[]>([]);
+
+  employeeLoading = signal(false);
+  employeeError = signal('');
+
   private clockInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private router: Router,
+    private employeeService: Employee,
     @Inject(PLATFORM_ID) private platformId: object
   ) { }
 
@@ -44,7 +58,103 @@ export class Dashboard implements OnInit, OnDestroy {
       this.clockInterval = setInterval(() => {
         this.updateClock();
       }, 1000);
+
+      this.loadEmployees();
     }
+
+
+  }
+
+  private loadEmployees(): void {
+    this.employeeLoading.set(true);
+    this.employeeError.set('');
+
+
+    this.employeeService.getAllEmployees().subscribe({
+      next: (response: any) => {
+        this.employeeLoading.set(false);
+
+        const employees = this.extractEmployees(response);
+
+        this.totalEmployees.set(employees.length);
+        this.recentEmployees.set(employees.slice(0, 5));
+
+        const activeCount = employees.filter((employee) => {
+          if (employee.active !== undefined) {
+            return employee.active;
+          }
+
+          if (employee.isActive !== undefined) {
+            return employee.isActive;
+          }
+
+          return true;
+        }).length;
+
+        this.activeEmployees.set(activeCount);
+
+        const departmentCount = new Set(
+          employees
+            .map((employee) => employee.department)
+            .filter((department) => !!department)
+        ).size;
+
+        this.departments.set(departmentCount);
+      },
+
+      error: (error: any) => {
+        this.employeeLoading.set(false);
+        this.employeeError.set(
+          error?.error?.message ||
+          'Unable to load employees. Please check backend API.'
+        );
+
+        console.error('Employee API Error:', error);
+      }
+    });
+
+
+  }
+
+  private extractEmployees(response: any): EmployeeModel[] {
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+
+    if (Array.isArray(response?.data)) {
+      return response.data;
+    }
+
+    if (Array.isArray(response?.content)) {
+      return response.content;
+    }
+
+    if (Array.isArray(response?.data?.content)) {
+      return response.data.content;
+    }
+
+    if (Array.isArray(response?.employees)) {
+      return response.employees;
+    }
+
+    return [];
+
+
+  }
+
+  getEmployeeName(employee: EmployeeModel): string {
+    if (employee.name) {
+      return employee.name;
+    }
+
+
+    const firstName = employee.firstName || '';
+    const lastName = employee.lastName || '';
+
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return fullName || 'Unnamed Employee';
 
 
   }
