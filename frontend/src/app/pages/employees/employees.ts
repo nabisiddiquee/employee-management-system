@@ -221,23 +221,7 @@ export class Employees implements OnInit {
   }
 
   addEmployee(): void {
-    Swal.fire({
-      icon: 'info',
-      iconColor: '#2563eb',
-      title: 'Coming Next',
-      text: 'Add Employee form will be implemented in the next step.',
-      confirmButtonText: 'Okay',
-      buttonsStyling: false,
-      heightAuto: false,
-      customClass: {
-        container: 'ems-alert-container',
-        popup: 'ems-alert-popup ems-alert-warning',
-        icon: 'ems-alert-icon',
-        title: 'ems-alert-title',
-        htmlContainer: 'ems-alert-message',
-        confirmButton: 'ems-alert-button ems-alert-button-warning'
-      }
-    });
+    this.router.navigate(['/add-employee']);
   }
 
   viewEmployee(employee: EmployeeModel): void {

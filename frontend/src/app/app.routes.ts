@@ -4,6 +4,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Employees } from './pages/employees/employees';
+import { AddEmployee } from './pages/add-employee/add-employee';
 
 import { authGuard } from './core/guards/auth-guard';
 
@@ -22,6 +23,12 @@ export const routes: Routes = [
   {
     path: 'employees',
     component: Employees,
+    canActivate: [authGuard]
+  },
+
+  {
+    path: 'add-employee',
+    component: AddEmployee,
     canActivate: [authGuard]
   },
 

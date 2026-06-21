@@ -1,102 +1,408 @@
+/* ===== EMS Global Styles ===== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 19px !important;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 19px !important;
+  line-height: 1.65 !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+  background: #f8fafc;
+}
+
+/* ===== Global Typography Upgrade ===== */
+
+h1 {
+  font-size: 46px !important;
+  line-height: 1.12 !important;
+  font-weight: 950 !important;
+}
+
+h2 {
+  font-size: 40px !important;
+  line-height: 1.18 !important;
+  font-weight: 950 !important;
+}
+
+h3 {
+  font-size: 30px !important;
+  line-height: 1.22 !important;
+  font-weight: 950 !important;
+}
+
+h4 {
+  font-size: 22px !important;
+  line-height: 1.3 !important;
+  font-weight: 900 !important;
+}
+
+p,
+label,
+span,
+td,
+th,
+input,
+select,
+textarea,
+button,
+a {
+  font-size: 18px !important;
+}
+
+small {
+  font-size: 16px !important;
+}
+
+/* ===== Sidebar Typography ===== */
+
+.sidebar-logo h3 {
+  font-size: 26px !important;
+}
+
+.sidebar-logo p {
+  font-size: 16px !important;
+}
+
+.menu-item {
+  font-size: 18px !important;
+}
+
+/* ===== Topbar Typography ===== */
+
+.topbar h1,
+.employees-topbar h1,
+.add-topbar h1 {
+  font-size: 46px !important;
+  line-height: 1.12 !important;
+}
+
+.topbar p,
+.employees-topbar p,
+.add-topbar p {
+  font-size: 18px !important;
+}
+
+/* ===== Dashboard / Summary Cards ===== */
+
+.stat-card p,
+.summary-card p {
+  font-size: 17px !important;
+}
+
+.stat-card h2,
+.summary-card h2 {
+  font-size: 42px !important;
+}
+
+.stat-icon,
+.summary-icon {
+  font-size: 29px !important;
+}
+
+/* ===== Panel Typography ===== */
+
+.panel-header h3,
+.activity-panel h3,
+.table-toolbar h3,
+.form-card-header h2,
+.form-info-card h3 {
+  font-size: 29px !important;
+}
+
+.panel-header p,
+.table-toolbar p,
+.form-card-header p,
+.form-info-card p {
+  font-size: 18px !important;
+}
+
+/* ===== Employee Cards / Table Typography ===== */
+
+.employee-info h4,
+.employee-cell h4 {
+  font-size: 20px !important;
+}
+
+.employee-info p,
+.employee-cell p {
+  font-size: 17px !important;
+}
+
+.employee-meta span,
+.department-pill,
+.status-pill {
+  font-size: 15px !important;
+}
+
+.employee-meta small {
+  font-size: 15px !important;
+}
+
+.employees-table th {
+  font-size: 16px !important;
+}
+
+.employees-table td {
+  font-size: 18px !important;
+}
+
+/* ===== Search / Forms ===== */
+
+.search-box input {
+  font-size: 18px !important;
+}
+
+.form-group label {
+  font-size: 18px !important;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-size: 18px !important;
+}
+
+.form-group small {
+  font-size: 16px !important;
+}
+
+/* ===== Buttons ===== */
+
+.primary-btn,
+.ghost-btn,
+.outline-btn,
+.submit-btn,
+.secondary-btn,
+.logout-btn,
+.action-btn {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* ===== Digital Clock Balanced Size ===== */
+
+.clock-time {
+  font-size: 31px !important;
+}
+
+.clock-date {
+  font-size: 15px !important;
+}
+
+.clock-label {
+  font-size: 13px !important;
+}
+
 /* ===== Premium SweetAlert Design ===== */
 
 .ems-alert-popup {
-width: 430px !important;
-padding: 34px 32px 30px !important;
-border-radius: 28px !important;
-background: linear-gradient(145deg, #ffffff, #f8fbff) !important;
-box-shadow: 0 28px 80px rgba(15, 23, 42, 0.22) !important;
-border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  width: 490px !important;
+  padding: 40px 38px 36px !important;
+  border-radius: 32px !important;
+  background: linear-gradient(145deg, #ffffff, #f8fbff) !important;
+  box-shadow: 0 32px 95px rgba(15, 23, 42, 0.25) !important;
+  border: 1px solid rgba(148, 163, 184, 0.20) !important;
 }
 
 .ems-alert-title {
-margin-top: 12px !important;
-color: #0f172a !important;
-font-size: 28px !important;
-font-weight: 800 !important;
-letter-spacing: -0.5px !important;
+  margin-top: 14px !important;
+  color: #0f172a !important;
+  font-size: 32px !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.6px !important;
 }
 
 .ems-alert-message {
-margin-top: 12px !important;
-color: #64748b !important;
-font-size: 15px !important;
-line-height: 1.65 !important;
+  margin-top: 14px !important;
+  color: #64748b !important;
+  font-size: 19px !important;
+  line-height: 1.75 !important;
+  font-weight: 600 !important;
 }
 
 .ems-alert-icon {
-transform: scale(1.06);
+  transform: scale(1.1);
 }
 
-.ems-alert-button {
-min-width: 165px !important;
-margin-top: 18px !important;
-padding: 13px 22px !important;
-border: 0 !important;
-border-radius: 14px !important;
-color: #ffffff !important;
-font-size: 15px !important;
-font-weight: 800 !important;
-box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22) !important;
-transition: all 0.25s ease !important;
+.swal2-html-container {
+  font-size: 19px !important;
 }
-
-.ems-alert-button:hover {
-transform: translateY(-2px) !important;
-}
-
-.ems-alert-success-button {
-background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-}
-
-.ems-alert-error-button {
-background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
-box-shadow: 0 10px 22px rgba(220, 38, 38, 0.2) !important;
-}
-
-.ems-alert-warning-button {
-background: linear-gradient(135deg, #f59e0b, #d97706) !important;
-box-shadow: 0 10px 22px rgba(245, 158, 11, 0.2) !important;
-}
-
-.swal2-backdrop-show {
-background: rgba(15, 23, 42, 0.58) !important;
-backdrop-filter: blur(5px) !important;
-}
-
-/* ===== Fix SweetAlert Logout Button Colors ===== */
 
 .swal2-actions {
-  gap: 14px !important;
+  gap: 16px !important;
+  margin-top: 26px !important;
 }
 
+.ems-alert-button,
 button.swal2-confirm.ems-alert-button,
 button.swal2-cancel.ems-alert-button {
-  min-width: 135px !important;
-  padding: 13px 22px !important;
-  border-radius: 14px !important;
+  min-width: 160px !important;
+  padding: 15px 26px !important;
   border: none !important;
+  border-radius: 16px !important;
   color: #ffffff !important;
-  font-size: 14px !important;
-  font-weight: 900 !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
   opacity: 1 !important;
   cursor: pointer !important;
+  transition: all 0.25s ease !important;
 }
 
-/* Yes Logout button */
-button.swal2-confirm.ems-alert-button-error {
-  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
-  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.35) !important;
-}
-
-/* Cancel button */
-button.swal2-cancel.ems-alert-button-warning {
-  background: linear-gradient(135deg, #64748b, #334155) !important;
-  box-shadow: 0 12px 24px rgba(51, 65, 85, 0.28) !important;
-}
-
+.ems-alert-button:hover,
 button.swal2-confirm.ems-alert-button:hover,
 button.swal2-cancel.ems-alert-button:hover {
   transform: translateY(-2px) !important;
   opacity: 1 !important;
+}
+
+/* Success Button Compatibility */
+.ems-alert-button-success,
+.ems-alert-success-button,
+button.swal2-confirm.ems-alert-button-success,
+button.swal2-confirm.ems-alert-success-button {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 13px 28px rgba(37, 99, 235, 0.32) !important;
+}
+
+/* Error Button Compatibility */
+.ems-alert-button-error,
+.ems-alert-error-button,
+button.swal2-confirm.ems-alert-button-error,
+button.swal2-confirm.ems-alert-error-button {
+  background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+  box-shadow: 0 13px 28px rgba(220, 38, 38, 0.36) !important;
+}
+
+/* Warning Button Compatibility */
+.ems-alert-button-warning,
+.ems-alert-warning-button,
+button.swal2-confirm.ems-alert-button-warning,
+button.swal2-confirm.ems-alert-warning-button {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  box-shadow: 0 13px 28px rgba(245, 158, 11, 0.34) !important;
+}
+
+/* Cancel Button */
+button.swal2-cancel.ems-alert-button-warning,
+button.swal2-cancel.ems-alert-warning-button {
+  background: linear-gradient(135deg, #64748b, #334155) !important;
+  box-shadow: 0 13px 28px rgba(51, 65, 85, 0.32) !important;
+}
+
+/* SweetAlert Backdrop */
+.swal2-backdrop-show {
+  background: rgba(15, 23, 42, 0.58) !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+/* SweetAlert Animation */
+.ems-alert-show {
+  animation: emsAlertShow 0.28s ease-out !important;
+}
+
+.ems-alert-hide {
+  animation: emsAlertHide 0.20s ease-in !important;
+}
+
+@keyframes emsAlertShow {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes emsAlertHide {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+
+/* ===== Mobile Font Balance ===== */
+
+@media (max-width: 768px) {
+  html {
+    font-size: 16px !important;
+  }
+
+  body {
+    font-size: 16px !important;
+  }
+
+  h1,
+  .topbar h1,
+  .employees-topbar h1,
+  .add-topbar h1 {
+    font-size: 34px !important;
+  }
+
+  h2 {
+    font-size: 30px !important;
+  }
+
+  h3 {
+    font-size: 24px !important;
+  }
+
+  h4 {
+    font-size: 20px !important;
+  }
+
+  p,
+  label,
+  span,
+  td,
+  th,
+  input,
+  select,
+  textarea,
+  button,
+  a {
+    font-size: 16px !important;
+  }
+
+  small {
+    font-size: 14px !important;
+  }
+
+  .ems-alert-popup {
+    width: 92vw !important;
+    padding: 32px 24px 28px !important;
+  }
+
+  .ems-alert-title {
+    font-size: 26px !important;
+  }
+
+  .ems-alert-message,
+  .swal2-html-container {
+    font-size: 16px !important;
+  }
+
+  .ems-alert-button,
+  button.swal2-confirm.ems-alert-button,
+  button.swal2-cancel.ems-alert-button {
+    font-size: 16px !important;
+    min-width: 135px !important;
+  }
 }
