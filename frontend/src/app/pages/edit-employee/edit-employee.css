@@ -1,0 +1,13 @@
+@import '../add-employee/add-employee.css';
+
+.loading-box {
+    width: 100%;
+    padding: 24px;
+    border-radius: 22px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 20px;
+    font-weight: 900;
+    text-align: center;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+}

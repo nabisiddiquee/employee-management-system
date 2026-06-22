@@ -1,0 +1,263 @@
+<div class="add-layout">
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-logo">
+            <div class="logo-box">EMS</div>
+
+            <div>
+                <h3>EMS Portal</h3>
+                <p>Admin Dashboard</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a class="menu-item" href="/dashboard">
+                <span>📊</span>
+                Dashboard
+            </a>
+
+            <a class="menu-item" href="/employees">
+                <span>👥</span>
+                Employees
+            </a>
+
+            <a class="menu-item active">
+                <span>✏️</span>
+                Edit Employee
+            </a>
+
+            <a class="menu-item">
+                <span>🔐</span>
+                Roles
+            </a>
+
+            <a class="menu-item">
+                <span>⚙️</span>
+                Settings
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" type="button" (click)="logout()">
+                Logout
+            </button>
+        </div>
+
+
+    </aside>
+
+    <main class="add-main">
+
+
+        <header class="add-topbar">
+
+            <div>
+                <h1>Edit Employee</h1>
+                <p>Update employee details using protected ADMIN API.</p>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="ghost-btn" type="button" (click)="goToEmployees()">
+                    Employee List
+                </button>
+
+                <button class="ghost-btn" type="button" (click)="goToDashboard()">
+                    Dashboard
+                </button>
+
+                <div class="profile-avatar">
+                    {{ userEmail().charAt(0).toUpperCase() }}
+                </div>
+            </div>
+
+        </header>
+
+        <section class="form-shell">
+
+            <div class="form-info-card">
+                <div class="info-icon">✏️</div>
+
+                <h3>Update Employee</h3>
+
+                <p>
+                    Edit employee information carefully. This form will call
+                    <b>PUT /api/employees/{{ employeeId }}</b> with JWT authorization.
+                </p>
+
+                <div class="info-list">
+                    <div>
+                        <span>✅</span>
+                        Protected Route
+                    </div>
+
+                    <div>
+                        <span>🔐</span>
+                        ADMIN Only Update
+                    </div>
+
+                    <div>
+                        <span>⚡</span>
+                        SweetAlert Feedback
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+
+                <div class="form-card-header">
+                    <h2>Employee Information</h2>
+                    <p>Update fields and save changes.</p>
+                </div>
+
+                <div class="loading-box" *ngIf="pageLoading()">
+                    Loading employee details...
+                </div>
+
+                <form *ngIf="!pageLoading()" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+                            <label>Employee Code</label>
+
+                            <input type="text" formControlName="employeeCode" placeholder="EMP-001" />
+
+                            <small *ngIf="
+              employeeForm.get('employeeCode')?.touched &&
+              employeeForm.get('employeeCode')?.invalid
+            ">
+                                Employee code is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>First Name</label>
+
+                            <input type="text" formControlName="firstName" placeholder="Enter first name" />
+
+                            <small *ngIf="
+              employeeForm.get('firstName')?.touched &&
+              employeeForm.get('firstName')?.invalid
+            ">
+                                First name is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Last Name</label>
+
+                            <input type="text" formControlName="lastName" placeholder="Enter last name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+
+                            <input type="email" formControlName="email" placeholder="employee@example.com" />
+
+                            <small *ngIf="
+              employeeForm.get('email')?.touched &&
+              employeeForm.get('email')?.invalid
+            ">
+                                Valid email is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+
+                            <input type="text" formControlName="mobile" placeholder="9876543210" maxlength="10"
+                                inputmode="numeric" />
+
+                            <small *ngIf="
+              employeeForm.get('mobile')?.touched &&
+              employeeForm.get('mobile')?.invalid
+            ">
+                                Valid Indian mobile number is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Department</label>
+
+                            <select formControlName="department">
+                                <option value="">Select department</option>
+
+                                <option *ngFor="let department of departments" [value]="department">
+                                    {{ department }}
+                                </option>
+                            </select>
+
+                            <small *ngIf="
+              employeeForm.get('department')?.touched &&
+              employeeForm.get('department')?.invalid
+            ">
+                                Department is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+
+                            <select formControlName="status">
+                                <option value="ACTIVE">ACTIVE</option>
+                                <option value="INACTIVE">INACTIVE</option>
+                            </select>
+
+                            <small *ngIf="
+              employeeForm.get('status')?.touched &&
+              employeeForm.get('status')?.invalid
+            ">
+                                Status is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Joining Date</label>
+
+                            <input type="date" formControlName="joiningDate" />
+
+                            <small *ngIf="
+              employeeForm.get('joiningDate')?.touched &&
+              employeeForm.get('joiningDate')?.invalid
+            ">
+                                Joining date is required.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Salary</label>
+
+                            <input type="number" formControlName="salary" placeholder="Enter salary" />
+
+                            <small *ngIf="
+              employeeForm.get('salary')?.touched &&
+              employeeForm.get('salary')?.invalid
+            ">
+                                Salary is required.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="secondary-btn" type="button" (click)="goToEmployees()">
+                            Cancel
+                        </button>
+
+                        <button class="submit-btn" type="submit" [disabled]="loading()">
+                            {{ loading() ? 'Updating...' : 'Update Employee' }}
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>

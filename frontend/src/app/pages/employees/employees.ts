@@ -257,25 +257,18 @@ export class Employees implements OnInit {
     });
   }
 
-  editEmployee(employee: EmployeeModel): void {
-    Swal.fire({
-      icon: 'info',
-      iconColor: '#f59e0b',
-      title: 'Edit Employee',
-      text: `${this.getEmployeeName(employee)} edit form will be implemented next.`,
-      confirmButtonText: 'Okay',
-      buttonsStyling: false,
-      heightAuto: false,
-      customClass: {
-        container: 'ems-alert-container',
-        popup: 'ems-alert-popup ems-alert-warning',
-        icon: 'ems-alert-icon',
-        title: 'ems-alert-title',
-        htmlContainer: 'ems-alert-message',
-        confirmButton: 'ems-alert-button ems-alert-button-warning'
-      }
-    });
+ editEmployee(employee: EmployeeModel): void {
+  if (!employee.id) {
+    this.showErrorAlert(
+      'Missing Employee ID',
+      'Employee ID is missing. Unable to edit this employee.'
+    );
+
+    return;
   }
+
+  this.router.navigate(['/edit-employee', employee.id]);
+}
 
   deleteEmployee(employee: EmployeeModel): void {
     if (!employee.id) {
