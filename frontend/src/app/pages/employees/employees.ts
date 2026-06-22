@@ -141,14 +141,18 @@ export class Employees implements OnInit {
     const filtered = this.employees().filter((employee) => {
       const name = this.getEmployeeName(employee).toLowerCase();
       const email = (employee.email || '').toLowerCase();
+      const employeeCode = (employee.employeeCode || '').toLowerCase();
       const department = (employee.department || '').toLowerCase();
-      const designation = (employee.designation || '').toLowerCase();
+      const mobile = (employee.mobile || employee.phone || '').toLowerCase();
+      const status = (employee.status || '').toLowerCase();
 
       return (
         name.includes(query) ||
         email.includes(query) ||
+        employeeCode.includes(query) ||
         department.includes(query) ||
-        designation.includes(query)
+        mobile.includes(query) ||
+        status.includes(query)
       );
     });
 
@@ -201,17 +205,25 @@ export class Employees implements OnInit {
 
   }
 
+  getEmployeeMobile(employee: EmployeeModel): string {
+    return employee.mobile || employee.phone || 'N/A';
+  }
+
   getEmployeeStatus(employee: EmployeeModel): string {
-    if (employee.active !== undefined) {
-      return employee.active ? 'Active' : 'Inactive';
+    if (employee.status) {
+      return employee.status;
     }
 
+
+    if (employee.active !== undefined) {
+      return employee.active ? 'ACTIVE' : 'INACTIVE';
+    }
 
     if (employee.isActive !== undefined) {
-      return employee.isActive ? 'Active' : 'Inactive';
+      return employee.isActive ? 'ACTIVE' : 'INACTIVE';
     }
 
-    return 'Active';
+    return 'ACTIVE';
 
 
   }
@@ -229,7 +241,7 @@ export class Employees implements OnInit {
       icon: 'info',
       iconColor: '#2563eb',
       title: this.getEmployeeName(employee),
-      html: `         <div style="text-align:left; line-height:1.8">           <b>Email:</b> ${employee.email || 'N/A'}<br>           <b>Phone:</b> ${employee.phone || 'N/A'}<br>           <b>Department:</b> ${employee.department || 'N/A'}<br>           <b>Designation:</b> ${employee.designation || 'Employee'}<br>           <b>Status:</b> ${this.getEmployeeStatus(employee)}         </div>
+      html: `         <div style="text-align:left; line-height:1.8">           <b>Employee Code:</b> ${employee.employeeCode || 'N/A'}<br>           <b>Email:</b> ${employee.email || 'N/A'}<br>           <b>Mobile:</b> ${this.getEmployeeMobile(employee)}<br>           <b>Department:</b> ${employee.department || 'N/A'}<br>           <b>Salary:</b> ${employee.salary || 'N/A'}<br>           <b>Status:</b> ${this.getEmployeeStatus(employee)}<br>           <b>Joining Date:</b> ${employee.joiningDate || 'N/A'}         </div>
       `,
       confirmButtonText: 'Close',
       buttonsStyling: false,
@@ -266,6 +278,16 @@ export class Employees implements OnInit {
   }
 
   deleteEmployee(employee: EmployeeModel): void {
+    if (!employee.id) {
+      this.showErrorAlert(
+        'Missing Employee ID',
+        'Employee ID is missing. Unable to delete this employee.'
+      );
+
+
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       iconColor: '#ef4444',
@@ -274,6 +296,7 @@ export class Employees implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete',
       cancelButtonText: 'Cancel',
+      reverseButtons: true,
       buttonsStyling: false,
       heightAuto: false,
       customClass: {
@@ -285,7 +308,63 @@ export class Employees implements OnInit {
         confirmButton: 'ems-alert-button ems-alert-button-error',
         cancelButton: 'ems-alert-button ems-alert-button-warning'
       }
+    }).then((result) => {
+      if (!result.isConfirmed || !employee.id) {
+        return;
+      }
+
+      this.loading.set(true);
+
+      this.employeeService.deleteEmployee(employee.id).subscribe({
+        next: () => {
+          this.loading.set(false);
+
+          Swal.fire({
+            icon: 'success',
+            iconColor: '#22c55e',
+            title: 'Employee Deleted!',
+            text: 'Employee has been deleted successfully.',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            heightAuto: false,
+            buttonsStyling: false,
+            customClass: {
+              container: 'ems-alert-container',
+              popup: 'ems-alert-popup ems-alert-success',
+              icon: 'ems-alert-icon',
+              title: 'ems-alert-title',
+              htmlContainer: 'ems-alert-message'
+            }
+          }).then(() => {
+            this.loadEmployees();
+          });
+        },
+
+        error: (error: any) => {
+          this.loading.set(false);
+
+          console.error('Delete Employee Error:', error);
+
+          if (error?.status === 401 || error?.status === 403) {
+            this.showErrorAlert(
+              'Access Denied',
+              'Only ADMIN users can delete employees. Please login with an ADMIN account.'
+            );
+
+            return;
+          }
+
+          this.showErrorAlert(
+            'Delete Failed',
+            error?.error?.message ||
+            'Unable to delete employee. Please check backend API.'
+          );
+        }
+      });
     });
+
+
   }
 
   logout(): void {
@@ -321,5 +400,25 @@ export class Employees implements OnInit {
     });
 
 
+  }
+
+  private showErrorAlert(title: string, message: string): void {
+    Swal.fire({
+      icon: 'error',
+      iconColor: '#ef4444',
+      title,
+      text: message,
+      confirmButtonText: 'Okay',
+      buttonsStyling: false,
+      heightAuto: false,
+      customClass: {
+        container: 'ems-alert-container',
+        popup: 'ems-alert-popup ems-alert-error',
+        icon: 'ems-alert-icon',
+        title: 'ems-alert-title',
+        htmlContainer: 'ems-alert-message',
+        confirmButton: 'ems-alert-button ems-alert-button-error'
+      }
+    });
   }
 }
