@@ -36,6 +36,10 @@ export class Employees implements OnInit {
   currentPage = 1;
   pageSize = 5;
   totalPages = 1;
+  totalElements = 0;
+
+  sortBy = 'id';
+  sortDir: 'asc' | 'desc' = 'desc';
 
   constructor(
     private employeeService: Employee,
@@ -71,14 +75,36 @@ export class Employees implements OnInit {
     this.errorMessage.set('');
 
 
-    this.employeeService.getAllEmployees().subscribe({
+    const backendPage = this.currentPage - 1;
+
+    this.employeeService.searchEmployees(
+      this.searchText.trim(),
+      backendPage,
+      this.pageSize,
+      this.sortBy,
+      this.sortDir
+    ).subscribe({
       next: (response: any) => {
         this.loading.set(false);
 
-        const employeeList = this.extractEmployees(response);
+        const pageData = this.extractPageData(response);
+        const employeeList = pageData.content;
 
         this.employees.set(employeeList);
-        this.applySearchAndPagination();
+        this.filteredEmployees.set(employeeList);
+        this.paginatedEmployees.set(employeeList);
+
+        this.totalPages = pageData.totalPages;
+        this.totalElements = pageData.totalElements;
+
+        if (this.totalPages < 1) {
+          this.totalPages = 1;
+        }
+
+        if (this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages;
+          this.loadEmployees();
+        }
       },
 
       error: (error: any) => {
@@ -91,102 +117,116 @@ export class Employees implements OnInit {
         } else {
           this.errorMessage.set(
             error?.error?.message ||
-            'Unable to load employees. Please check backend API.'
+            'Unable to load employees. Please check backend search API.'
           );
         }
 
-        console.error('Employee API Error:', error);
+        console.error('Employee Search API Error:', error);
       }
     });
 
 
   }
 
-  private extractEmployees(response: any): EmployeeModel[] {
-    if (Array.isArray(response)) {
-      return response;
+  private extractPageData(response: any): {
+    content: EmployeeModel[];
+    totalPages: number;
+    totalElements: number;
+  } {
+    const data = response?.data || response;
+
+
+    if (Array.isArray(data?.employees)) {
+      return {
+        content: data.employees,
+        totalPages: Number(data.totalPages) || 1,
+        totalElements:
+          Number(data.totalItems) ||
+          Number(data.totalElements) ||
+          data.employees.length
+      };
     }
 
-
-    if (Array.isArray(response?.data)) {
-      return response.data;
+    if (Array.isArray(data?.content)) {
+      return {
+        content: data.content,
+        totalPages: Number(data.totalPages) || 1,
+        totalElements:
+          Number(data.totalElements) ||
+          Number(data.totalItems) ||
+          data.content.length
+      };
     }
 
-    if (Array.isArray(response?.content)) {
-      return response.content;
+    if (Array.isArray(data?.data?.content)) {
+      return {
+        content: data.data.content,
+        totalPages: Number(data.data.totalPages) || 1,
+        totalElements:
+          Number(data.data.totalElements) ||
+          Number(data.data.totalItems) ||
+          data.data.content.length
+      };
     }
 
-    if (Array.isArray(response?.data?.content)) {
-      return response.data.content;
+    if (Array.isArray(data)) {
+      return {
+        content: data,
+        totalPages: 1,
+        totalElements: data.length
+      };
     }
 
     if (Array.isArray(response?.employees)) {
-      return response.employees;
+      return {
+        content: response.employees,
+        totalPages: 1,
+        totalElements: response.employees.length
+      };
     }
 
-    return [];
+    return {
+      content: [],
+      totalPages: 1,
+      totalElements: 0
+    };
 
 
   }
 
   onSearchChange(): void {
     this.currentPage = 1;
-    this.applySearchAndPagination();
+    this.loadEmployees();
   }
 
   applySearchAndPagination(): void {
-    const query = this.searchText.trim().toLowerCase();
-
-
-    const filtered = this.employees().filter((employee) => {
-      const name = this.getEmployeeName(employee).toLowerCase();
-      const email = (employee.email || '').toLowerCase();
-      const employeeCode = (employee.employeeCode || '').toLowerCase();
-      const department = (employee.department || '').toLowerCase();
-      const mobile = (employee.mobile || employee.phone || '').toLowerCase();
-      const status = (employee.status || '').toLowerCase();
-
-      return (
-        name.includes(query) ||
-        email.includes(query) ||
-        employeeCode.includes(query) ||
-        department.includes(query) ||
-        mobile.includes(query) ||
-        status.includes(query)
-      );
-    });
-
-    this.filteredEmployees.set(filtered);
-
-    this.totalPages = Math.max(
-      1,
-      Math.ceil(filtered.length / this.pageSize)
-    );
-
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = this.totalPages;
-    }
-
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-
-    this.paginatedEmployees.set(filtered.slice(startIndex, endIndex));
-
-
+    this.loadEmployees();
   }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.applySearchAndPagination();
+      this.loadEmployees();
     }
   }
 
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.applySearchAndPagination();
+      this.loadEmployees();
     }
+  }
+
+  changePageSize(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 1;
+    this.loadEmployees();
+  }
+
+  toggleSortDirection(): void {
+    this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    this.currentPage = 1;
+    this.loadEmployees();
   }
 
   getEmployeeName(employee: EmployeeModel): string {
@@ -257,18 +297,21 @@ export class Employees implements OnInit {
     });
   }
 
- editEmployee(employee: EmployeeModel): void {
-  if (!employee.id) {
-    this.showErrorAlert(
-      'Missing Employee ID',
-      'Employee ID is missing. Unable to edit this employee.'
-    );
+  editEmployee(employee: EmployeeModel): void {
+    if (!employee.id) {
+      this.showErrorAlert(
+        'Missing Employee ID',
+        'Employee ID is missing. Unable to edit this employee.'
+      );
 
-    return;
+
+      return;
+    }
+
+    this.router.navigate(['/edit-employee', employee.id]);
+
+
   }
-
-  this.router.navigate(['/edit-employee', employee.id]);
-}
 
   deleteEmployee(employee: EmployeeModel): void {
     if (!employee.id) {

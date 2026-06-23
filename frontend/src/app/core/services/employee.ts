@@ -60,22 +60,33 @@ export class Employee {
         return this.http.get<any>(`${this.baseUrl}/${id}`);
     }
 
-    getEmployeesWithPagination(
+    searchEmployees(
+        keyword: string = '',
         page: number = 0,
         size: number = 5,
         sortBy: string = 'id',
         sortDir: string = 'desc'
     ): Observable<any> {
         const params = new HttpParams()
+            .set('keyword', keyword)
             .set('page', page)
             .set('size', size)
             .set('sortBy', sortBy)
             .set('sortDir', sortDir);
 
-        
-return this.http.get<any>(this.baseUrl, { params });
+
+        return this.http.get<any>(`${this.baseUrl}/search`, { params });
 
 
+    }
+
+    getEmployeesWithPagination(
+        page: number = 0,
+        size: number = 5,
+        sortBy: string = 'id',
+        sortDir: string = 'desc'
+    ): Observable<any> {
+        return this.searchEmployees('', page, size, sortBy, sortDir);
     }
 
     createEmployee(request: CreateEmployeeRequest): Observable<any> {
