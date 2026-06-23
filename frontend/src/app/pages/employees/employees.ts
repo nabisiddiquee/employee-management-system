@@ -24,6 +24,7 @@ import {
 })
 export class Employees implements OnInit {
   userEmail = signal('[admin@ems.com](mailto:admin@ems.com)');
+  userRole = signal('USER');
 
   employees = signal<EmployeeModel[]>([]);
   filteredEmployees = signal<EmployeeModel[]>([]);
@@ -63,7 +64,11 @@ export class Employees implements OnInit {
     const email =
       window.localStorage.getItem('ems_user_email') || 'admin@ems.com';
 
+    const role =
+      window.localStorage.getItem('ems_user_role') || 'USER';
+
     this.userEmail.set(email);
+    this.userRole.set(role.toUpperCase());
 
     this.loadEmployees();
 
@@ -229,6 +234,10 @@ export class Employees implements OnInit {
     this.loadEmployees();
   }
 
+  isAdmin(): boolean {
+    return this.userRole() === 'ADMIN';
+  }
+
   getEmployeeName(employee: EmployeeModel): string {
     if (employee.name) {
       return employee.name;
@@ -273,7 +282,19 @@ export class Employees implements OnInit {
   }
 
   addEmployee(): void {
+    if (!this.isAdmin()) {
+      this.showErrorAlert(
+        'Access Denied',
+        'Only ADMIN users can add employees.'
+      );
+
+
+      return;
+    }
+
     this.router.navigate(['/add-employee']);
+
+
   }
 
   viewEmployee(employee: EmployeeModel): void {
@@ -298,12 +319,21 @@ export class Employees implements OnInit {
   }
 
   editEmployee(employee: EmployeeModel): void {
+    if (!this.isAdmin()) {
+      this.showErrorAlert(
+        'Access Denied',
+        'Only ADMIN users can edit employees.'
+      );
+
+
+      return;
+    }
+
     if (!employee.id) {
       this.showErrorAlert(
         'Missing Employee ID',
         'Employee ID is missing. Unable to edit this employee.'
       );
-
 
       return;
     }
@@ -314,12 +344,21 @@ export class Employees implements OnInit {
   }
 
   deleteEmployee(employee: EmployeeModel): void {
+    if (!this.isAdmin()) {
+      this.showErrorAlert(
+        'Access Denied',
+        'Only ADMIN users can delete employees.'
+      );
+
+
+      return;
+    }
+
     if (!employee.id) {
       this.showErrorAlert(
         'Missing Employee ID',
         'Employee ID is missing. Unable to delete this employee.'
       );
-
 
       return;
     }
@@ -428,6 +467,7 @@ export class Employees implements OnInit {
         if (isPlatformBrowser(this.platformId)) {
           window.localStorage.removeItem('ems_token');
           window.localStorage.removeItem('ems_user_email');
+          window.localStorage.removeItem('ems_user_role');
         }
 
 

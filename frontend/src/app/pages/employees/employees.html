@@ -2,13 +2,13 @@
 
     <aside class="sidebar">
 
-
+        
         <div class="sidebar-logo">
             <div class="logo-box">EMS</div>
 
             <div>
                 <h3>EMS Portal</h3>
-                <p>Admin Dashboard</p>
+                <p>{{ userRole() }} Dashboard</p>
             </div>
         </div>
 
@@ -23,7 +23,7 @@
                 Employees
             </a>
 
-            <a class="menu-item" (click)="addEmployee()">
+            <a class="menu-item" *ngIf="isAdmin()" (click)="addEmployee()">
                 <span>➕</span>
                 Add Employee
             </a>
@@ -44,18 +44,25 @@
                 Logout
             </button>
         </div>
-
+        
 
     </aside>
 
     <main class="employees-main">
 
-
+        
         <header class="employees-topbar">
 
             <div>
                 <h1>Employees</h1>
-                <p>Manage employees, search records, and perform admin actions.</p>
+
+                <p *ngIf="isAdmin()">
+                    Manage employees, search records, and perform admin actions.
+                </p>
+
+                <p *ngIf="!isAdmin()">
+                    View employee records with read-only access.
+                </p>
             </div>
 
             <div class="topbar-actions">
@@ -63,7 +70,7 @@
                     Dashboard
                 </button>
 
-                <button class="primary-btn" type="button" (click)="addEmployee()">
+                <button class="primary-btn" type="button" *ngIf="isAdmin()" (click)="addEmployee()">
                     + Add Employee
                 </button>
 
@@ -81,7 +88,7 @@
 
                 <div>
                     <p>Total Employees</p>
-                    <h2>{{ employees().length }}</h2>
+                    <h2>{{ totalElements }}</h2>
                 </div>
             </div>
 
@@ -95,11 +102,11 @@
             </div>
 
             <div class="summary-card">
-                <div class="summary-icon orange">🔎</div>
+                <div class="summary-icon orange">🔐</div>
 
                 <div>
-                    <p>Search Results</p>
-                    <h2>{{ filteredEmployees().length }}</h2>
+                    <p>Current Role</p>
+                    <h2>{{ userRole() }}</h2>
                 </div>
             </div>
 
@@ -138,7 +145,14 @@
             <div *ngIf="!loading() && !errorMessage() && filteredEmployees().length === 0" class="state-box">
                 <div class="state-icon">👨‍💼</div>
                 <h4>No employees found</h4>
-                <p>Try a different search keyword or add a new employee.</p>
+
+                <p *ngIf="isAdmin()">
+                    Try a different search keyword or add a new employee.
+                </p>
+
+                <p *ngIf="!isAdmin()">
+                    Try a different search keyword.
+                </p>
             </div>
 
             <div *ngIf="!loading() && !errorMessage() && filteredEmployees().length > 0" class="table-wrapper">
@@ -150,7 +164,7 @@
                             <th>Employee</th>
                             <th>Email</th>
                             <th>Department</th>
-                            <th>Designation</th>
+                            <th>Mobile</th>
                             <th>Status</th>
                             <th class="actions-col">Actions</th>
                         </tr>
@@ -180,10 +194,10 @@
                                 </span>
                             </td>
 
-                            <td>{{ employee.designation || 'Employee' }}</td>
+                            <td>{{ getEmployeeMobile(employee) }}</td>
 
                             <td>
-                                <span class="status-pill" [class.inactive]="getEmployeeStatus(employee) === 'Inactive'">
+                                <span class="status-pill" [class.inactive]="getEmployeeStatus(employee) === 'INACTIVE'">
                                     {{ getEmployeeStatus(employee) }}
                                 </span>
                             </td>
@@ -193,11 +207,13 @@
                                     View
                                 </button>
 
-                                <button class="action-btn edit" type="button" (click)="editEmployee(employee)">
+                                <button class="action-btn edit" type="button" *ngIf="isAdmin()"
+                                    (click)="editEmployee(employee)">
                                     Edit
                                 </button>
 
-                                <button class="action-btn delete" type="button" (click)="deleteEmployee(employee)">
+                                <button class="action-btn delete" type="button" *ngIf="isAdmin()"
+                                    (click)="deleteEmployee(employee)">
                                     Delete
                                 </button>
                             </td>
@@ -228,6 +244,7 @@
             </div>
 
         </section>
+        
 
     </main>
 

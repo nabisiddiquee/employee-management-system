@@ -8,23 +8,13 @@ import { AddEmployee } from './pages/add-employee/add-employee';
 import { EditEmployee } from './pages/edit-employee/edit-employee';
 
 import { authGuard } from './core/guards/auth-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  {
-    path: 'login',
-    component: Login
-  },
-
-  {
-    path: 'register',
-    component: Register
-  },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
 
   {
     path: 'dashboard',
@@ -41,17 +31,14 @@ export const routes: Routes = [
   {
     path: 'add-employee',
     component: AddEmployee,
-    canActivate: [authGuard]
+    canActivate: [authGuard, adminGuard]
   },
 
   {
     path: 'edit-employee/:id',
     component: EditEmployee,
-    canActivate: [authGuard]
+    canActivate: [authGuard, adminGuard]
   },
 
-  {
-    path: '**',
-    redirectTo: 'login'
-  }
+  { path: '**', redirectTo: 'login' }
 ];

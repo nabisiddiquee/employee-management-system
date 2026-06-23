@@ -2,7 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
-export const authGuard: CanActivateFn = () => {
+export const adminGuard: CanActivateFn = () => {
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);
 
@@ -11,10 +11,15 @@ export const authGuard: CanActivateFn = () => {
   }
 
   const token = window.localStorage.getItem('ems_token');
+  const role = window.localStorage.getItem('ems_user_role');
 
-  if (token && token.trim().length > 0) {
+  if (!token || token.trim().length === 0) {
+    return router.createUrlTree(['/login']);
+  }
+
+  if (role && role.toUpperCase() === 'ADMIN') {
     return true;
   }
 
-  return router.createUrlTree(['/login']);
+  return router.createUrlTree(['/employees']);
 };
