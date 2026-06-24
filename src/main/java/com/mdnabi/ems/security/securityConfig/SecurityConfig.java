@@ -1,6 +1,7 @@
 package com.mdnabi.ems.security.securityConfig;
 
 import com.mdnabi.ems.security.JwtAuthenticationFilter;
+import com.mdnabi.ems.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig {
                 )
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
                 .authorizeHttpRequests(auth -> auth
@@ -44,7 +46,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
 
-                        .requestMatchers("/api/auth/**")
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/oauth2/**",
+                                "/login/oauth2/**"
+                        )
                         .permitAll()
 
                         .requestMatchers(
@@ -67,6 +73,10 @@ public class SecurityConfig {
 
                         .anyRequest()
                         .authenticated()
+                )
+
+                .oauth2Login(oauth2 ->
+                        oauth2.successHandler(oAuth2LoginSuccessHandler)
                 )
 
                 .addFilterBefore(
@@ -112,4 +122,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

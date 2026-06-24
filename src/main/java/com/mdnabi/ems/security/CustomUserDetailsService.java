@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
+
     private final UserRepository userRepository;
 
     @Override
@@ -26,11 +27,21 @@ public class CustomUserDetailsService implements UserDetailsService {
                         new UsernameNotFoundException("User not found with email: " + email)
                 );
 
-        String roleName = user.getRole().getName();
+        String roleName = "USER";
+
+        if (user.getRole() != null && user.getRole().getName() != null) {
+            roleName = user.getRole().getName();
+        }
+
+        String password = user.getPassword();
+
+        if (password == null || password.isBlank()) {
+            password = "{noop}GOOGLE_OAUTH2_USER";
+        }
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
-                .password(user.getPassword())
+                .password(password)
                 .authorities(
                         List.of(
                                 new SimpleGrantedAuthority(roleName),
@@ -39,5 +50,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 )
                 .build();
     }
+
 
 }

@@ -6,6 +6,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Employees } from './pages/employees/employees';
 import { AddEmployee } from './pages/add-employee/add-employee';
 import { EditEmployee } from './pages/edit-employee/edit-employee';
+import { OAuth2Success } from './pages/oauth2-success/oauth2-success';  
 
 import { authGuard } from './core/guards/auth-guard';
 import { adminGuard } from './core/guards/admin-guard';
@@ -15,6 +16,7 @@ export const routes: Routes = [
 
   { path: 'login', component: Login },
   { path: 'register', component: Register },
+  { path: 'oauth2/success', component: OAuth2Success },
 
   {
     path: 'dashboard',
