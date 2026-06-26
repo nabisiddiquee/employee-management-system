@@ -1,4 +1,5 @@
 package com.mdnabi.ems.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "users")
@@ -28,6 +28,9 @@ public class User {
     private String password;
 
     private String provider; // LOCAL, GOOGLE
+
+    private String resetPasswordToken;
+    private LocalDateTime resetPasswordTokenExpiry;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
